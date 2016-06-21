@@ -5,10 +5,12 @@ from hessenberg import HessenMatrix
 
 def main():
     #For now just fuck memory 
-    A = readImage("a")
+    A = readImage("images/lena.png")
+    print(A)
     At = transpose(A)
     AtA = multMatrix(At, A)
     AAt = multMatrix(At, A)
+    saveImage("images/batata.png",255-A)
     
     H = HessenMatrix(A)
 
