@@ -16,7 +16,7 @@ def transpose(A):
 # Returna: O produto AB 
 
 def multMatrix(A, B):
-    C = [[ 0 for j in range(len(A))] for i in range(len(B[0]))]
+    C = [[ 0 for j in range(len(B[0]))] for i in range(len(A))]
     
     for i in range(len(A)):
         for j in range(len(B[0])):
