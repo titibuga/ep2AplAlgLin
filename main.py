@@ -11,16 +11,6 @@ def main():
     #At = transpose(A)
     #AtA = multMatrix(At, A)
     #AAt = multMatrix(At, A)
-    a = [[1,1,3],
-         [2,3,7],
-         [8,4,5]]
-    b = [[2,0,0],[0,2,0],[0,0,2]]
-
-    c = multMatrix(a,b)
-    print(c)
-    c2 = transpose(c)
-    print(c2)
-    
     saveImage("images/batata.png",255-A)
     
     H = HessenMatrix(A)

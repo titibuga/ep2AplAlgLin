@@ -8,15 +8,15 @@ import os
 # Retorna: A matriz transposta (array of arrays) de A 
 
 def transpose(A):
-    T  = [[A[j][i] for j in range(len(A))] for i in range(len(A[0]))]
-    return T
+    #T  = [[A[j][i] for j in range(len(A))] for i in range(len(A[0]))]
+    #return T
 
 # Função multMatrix
 # Argumentos: Matrizes (array de arrays) A e B
 # Returna: O produto AB 
 
 def multMatrix(A, B):
-    C = [[ 0 for j in range(len(B[0]))] for i in range(len(A))]
+    C = np.zeros((len(A),len(B[0])))
     
     for i in range(len(A)):
         for j in range(len(B[0])):
@@ -31,10 +31,7 @@ def multMatrix(A, B):
 # Returna: Uma matriz identidade nxn
 
 def identity(n):
-    I = []
-    for i in range(n):
-        I.append([1 if j == i else 0 for j in range(n)])
-    return I
+    return np.identity(n)
     
 
 # Função readImage
