@@ -8,17 +8,26 @@ import os
 # Retorna: A matriz transposta (array of arrays) de A 
 
 def transpose(A):
-    #TODO
-    return A
-    
+    T  = [[A[j][i] for j in range(len(A))] for i in range(len(A[0]))]
+    return T
 
 # Função multMatrix
 # Argumentos: Matrizes (array de arrays) A e B
 # Returna: O produto AB 
 
 def multMatrix(A, B):
-    #TODO
-    return A
+    C = []
+    for i in range(len(A)):
+        C.append([])
+        for j in range(len(B[0])):
+            C[i].append(0)
+    
+    for i in range(len(A)):
+        for j in range(len(B[0])):
+            for k in range(len(B)):
+                C[i][j] += A[i][k] * B[k][j]
+                
+    return C
 
 
 # Função indentity
