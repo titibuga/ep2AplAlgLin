@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef struct mat{
   int row;

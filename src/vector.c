@@ -28,6 +28,7 @@ float dotProduct(Vector* A, Vector* B){
 
 Vector* createVector(int len){
   Vector* aux = malloc(sizeof *aux);
+  aux->len = len;
   aux->vector = calloc(aux->len , sizeof(float));
   return aux;
 }

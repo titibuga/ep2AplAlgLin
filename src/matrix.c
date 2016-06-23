@@ -25,14 +25,15 @@ float** allocateMatrix(int row, int col){
 Matrix* createMatrix(int row, int col){
   Matrix* aux = malloc(sizeof *aux);
   int i,j;
-  
+  aux->row = row;
+  aux->col = col;
   aux->matrix = allocateMatrix(row,col);
   
   return aux; 
 }
 
 void freeMatrix(Matrix* mat){
-  deallocateDynamicMatrix(mat->matrix,mat->row);
+  deallocateMatrix(mat->matrix,mat->row);
   free(mat);
 }
 
