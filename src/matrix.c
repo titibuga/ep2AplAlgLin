@@ -1,7 +1,6 @@
 #include "matrix.h"
 
 float** allocateMatrix(int row, int col){
-
   float **ret_val;
     int i;
  
@@ -27,13 +26,13 @@ Matrix* createMatrix(int row, int col){
   int i,j;
   aux->row = row;
   aux->col = col;
-  aux->matrix = allocateMatrix(row,col);
+  aux->data = allocateMatrix(row,col);
   
   return aux; 
 }
 
 void freeMatrix(Matrix* mat){
-  deallocateMatrix(mat->matrix,mat->row);
+  deallocateMatrix(mat->data,mat->row);
   free(mat);
 }
 
@@ -42,7 +41,7 @@ void populateMatrix(Matrix* mat,int** matrix){
   
   for(i = 0; i < mat->row; i++)
     for(j = 0; j < mat->col; j++)
-      mat->matrix[i][j] = (float)matrix[i][j];
+      mat->data[i][j] = (float)matrix[i][j];
 }
 
 Matrix* multMatrix(Matrix* A, Matrix* B){
@@ -52,7 +51,7 @@ Matrix* multMatrix(Matrix* A, Matrix* B){
   for(i = 0; i < A->row; i++)
     for(k = 0; k < B->row; k++)
       for(j = 0; j < B->col; j++)
-	C->matrix[i][j] += A->matrix[i][k]*B->matrix[k][j];
+	C->data[i][j] += A->data[i][k]*B->data[k][j];
   
   return C;
 }

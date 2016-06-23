@@ -5,7 +5,7 @@
 
 typedef struct vec{
   int len;
-  float* vector;
+  float* data;
 }Vector;
 
 void multByScalar(float, Vector*);

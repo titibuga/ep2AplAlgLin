@@ -7,7 +7,7 @@
 typedef struct mat{
   int row;
   int col;
-  float** matrix;
+  float** data;
 }Matrix;
 
 float** allocateMatrix(int,int);
