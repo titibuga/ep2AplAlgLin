@@ -15,6 +15,7 @@ Matrix* createMatrix(int,int);
 void freeMatrix(Matrix*);
 void populateMatrix(Matrix*,int**);
 Matrix* multMatrix(Matrix*,Matrix*);
+void printMatrix(Matrix*);
 void deallocateMatrix(float**,int);
 
 #endif

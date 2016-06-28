@@ -44,6 +44,16 @@ void populateMatrix(Matrix* mat,int** matrix){
       mat->data[i][j] = (float)matrix[i][j];
 }
 
+void printMatrix(Matrix* mat){
+  int i,j;
+  for(i = 0; i < mat->row; i++){
+    for(j = 0; j < mat->col; j++){
+      printf("%f ",mat->data[i][j]);
+    }
+    printf("\n");
+  }
+}
+
 Matrix* multMatrix(Matrix* A, Matrix* B){
   Matrix* C = createMatrix(A->row,B->col);
   int i,j,k;
