@@ -33,6 +33,16 @@ Vector* createVector(int len){
   return aux;
 }
 
+Vector* copyVector(Vector* v){
+  Vector* copy = createVector(v->len);
+  int i;
+  for(i = 0; i < v->len; i++)
+    copy[i] = v[i];
+
+  return copy;
+}
+
+
 void freeVector(Vector* vec){
   free(vec->data);
   free(vec);

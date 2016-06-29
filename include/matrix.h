@@ -17,5 +17,6 @@ void populateMatrix(Matrix*,int**);
 Matrix* multMatrix(Matrix*,Matrix*);
 void printMatrix(Matrix*);
 void deallocateMatrix(float**,int);
+Matrix* createTranspose(Matrix*);
 
 #endif

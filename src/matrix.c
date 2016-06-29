@@ -31,6 +31,16 @@ Matrix* createMatrix(int row, int col){
   return aux; 
 }
 
+Matrix* createTranspose(Matrix* m){
+  Matrix* mt = createMatrix(m->col, m->row);
+  int i = 0, j = 0;
+
+  for(i = 0; i < m->row; i++)
+    for(j = 0; j < m->col; j++)
+      mt->data[j][i] = m->data[i][j];
+  
+}
+
 void freeMatrix(Matrix* mat){
   deallocateMatrix(mat->data,mat->row);
   free(mat);

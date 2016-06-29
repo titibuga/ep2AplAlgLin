@@ -14,5 +14,6 @@ void subVectors(Vector*, Vector*, Vector*);
 float dotProduct(Vector*, Vector*);
 Vector* createVector(int);
 void freeVector(Vector*);
+Vector* copyVector(Vector*);
 
 #endif

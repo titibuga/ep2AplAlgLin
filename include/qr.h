@@ -9,9 +9,10 @@
 typedef struct givens{
   float sin;
   float cos;
+  float i; /* Givens on lines {i, i+1} cols {i, i+1}*/
 }Givens;
 
-void qrDecomposition(Vector*,Vector*,Vector*);
+Givens** qrDecomposition(Vector*,Vector*,Vector*);
 Givens* givensRotation(float,float);
 void applyLeftGivensRotation(Givens*, Matrix*);
 
