@@ -43,6 +43,11 @@ void applyRightGivensRotation(Givens* gv, Matrix* m){
 }
 
 
+/*
+  Q = G[0]*G[1]*G[2]*(...)*G[n-1]
+
+ */
+
 Givens** qrDecomposition(Vector* up,Vector* mid,Vector* low){
   int m,n = mid->len;
   int i = 0;
