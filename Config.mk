@@ -43,9 +43,9 @@
 # =======
 # CPPFLAGS        := # Precompiler Flags
 # ASFLAGS         := # Assembly Flags
-# CFLAGS          := # C Flags
+ CFLAGS          := -g # C Flags
 # CXXFLAGS        := # C++ Flags
- LDFLAGS         := -lm # Linker flags
+ LDFLAGS         := -lm -g # Linker flags
 
 # Documentation
 # ===============
