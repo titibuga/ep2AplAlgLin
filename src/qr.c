@@ -1,6 +1,9 @@
 #include "qr.h"
 
+void applyRightGivensRotation(Givens*, Matrix*);
+
 Matrix *R;
+
 
 
 void qrMethod(Vector* up,Vector* mid,Vector* low){
@@ -8,21 +11,63 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
   Givens** vectorGivens;
   Vector *myUp, *myMid, *myLow;
   int n = mid->len;
-  int k, i, id;
+  int k2, k, j, i, id;
+  Matrix* mini = createMatrix(4,2);
   myUp = copyVector(up);
   myMid = copyVector(mid);
   myLow = copyVector(low);
 
-  for(k = 0; k < 100; k++){
+  for(k2 = 0; k2 < 100; k2++){
     vectorGivens = qrDecomposition(myUp, myMid,myLow);
     
     /* Time to do R*Q. Apply all givens on the right side */
-    for(i = n-1; i >= 0; i--){
+    for(i = 0; i < n-1; i++){
       id = vectorGivens[i]->i;
+      /* populate mini */
       
+      
+      for(j = -2; j <= 1; j++) 
+ 	for(k = 0; k < 2; k++){
+	  if(id + j >= 0 && id + j < n && k < n && k >= 0 )
+	    mini->data[j + 2][k] = R->data[id + j][id + k];
+	  else
+	    mini->data[j + 2][k] = 0;
+	}
+      printf("Matrix R\n");
+      printMatrix(R);
+
+      
+      printf("\n\nBefore rotation (id: %d): \n", id);
+
+      printMatrix(mini);
+
+      applyRightGivensRotation(vectorGivens[i], mini);
+
+      printf("After rotation: \n");
+      printMatrix(mini);
+
+      /*Populate R*/
+      for(j = -2; j <= 1; j++) 
+ 	for(k = 0; k < 2; k++){
+	  if(id + j >= 0 && id + j < n && k < n && k >= 0 )
+	    R->data[id + j][id + k] = mini->data[j + 2][k];
+	}
+      printf("\n");
     }
+
+    /* Populate the vectors with the answers in R */
+    for(i = 0; i < n-1; i++){
+      myMid->data[i]= R->data[i][i];
+      myLow->data[i]= R->data[i+1][i];
+      myUp->data[i]= R->data[i][i+1];
+    }
+    myMid->data[n-1]= R->data[n-1][n-1];
+      
+    
   }
 
+  printf("After some time frying, we got:\n");
+  printMatrix(R);
   
 
 }
@@ -50,9 +95,9 @@ void applyRightGivensRotation(Givens* gv, Matrix* m){
 
 Givens** qrDecomposition(Vector* up,Vector* mid,Vector* low){
   int m,n = mid->len;
-  int i = 0;
-  Matrix* mini = createMatrix(2,3);
-  Givens** vectorGivens = malloc(n*sizeof(Givens*));
+  int i = 0,j,k;
+  Matrix* mini = createMatrix(2,4);
+  Givens** vectorGivens = malloc((n-1)*sizeof(Givens*));
   R = createMatrix(n,n);
 
   for(i = 0; i < n-1; i++){
@@ -64,56 +109,66 @@ Givens** qrDecomposition(Vector* up,Vector* mid,Vector* low){
 
   
   for(i = 0; i < n-1; i++){
-    printMatrix(R);
+    //printMatrix(R);
 
-    printf("\n==========================\n");
+    //printf("\n==========================\n");
 
-    mini->data[0][0] = R->data[i][i];
-    mini->data[0][1] = R->data[i][i+1];
-    mini->data[1][0] = R->data[i+1][i];
-    mini->data[1][1] = R->data[i+1][i+1];
-    if(i < n-2){
-      mini->data[0][2] = R->data[i][i+2];
-      mini->data[1][2] = R->data[i+1][i+2];
-    }
-    vectorGivens[i] = givensRotation(mini->data[0][0],mini->data[1][0]);
+    /* Populate mini */
+    for(j = 0; j < 2; j++)
+      for(k = -1; k < 3; k++){
+	if(i + j >= 0 && i + j < n && i + k >= 0 && i + k < n)
+	  mini->data[j][k + 1] = R->data[i + j][i + k];
+	else
+	  mini->data[j][k + 1] = 0;
+      }
+
+    vectorGivens[i] = givensRotation(mini->data[0][1],mini->data[1][1]);
+    vectorGivens[i]->i = i;
     applyLeftGivensRotation(vectorGivens[i],mini);
-    R->data[i][i] = mini->data[0][0];
-    R->data[i][i+1] = mini->data[0][1];
-    R->data[i+1][i] = mini->data[1][0]; /*Se pa por arredondamento não
-					  dê 0 aqui, mas é pra dar */
-    R->data[i+1][i+1] = mini->data[1][1]; 
-    if(i < n-2){
-      R->data[i][i+2] = mini->data[0][2];
-      R->data[i+1][i+2] = mini->data[1][2];
-    }
+
+    
+    
+    /*Populate R with the answer*/
+
+    for(j = 0; j < 2; j++)
+      for(k = -1; k < 3; k++){
+	if(i + j >= 0 && i + j < n && i + k >= 0 && i + k < n)
+	  R->data[i + j][i + k] = mini->data[j][k + 1];
+      }
+
   }
   freeMatrix(mini);
-  for(i = 0; i < n; i++){ /*Transpose all givens */
+  for(i = 0; i < n-1; i++){ /*Transpose all givens */
     vectorGivens[i]->sin = -1*vectorGivens[i]->sin;
   }
-  printMatrix(R);
+  //printMatrix(R);
+
+  return vectorGivens;
 }
 
 float absF(float a){
   return a > 0? a : -1*a;
 }
 
-void applyLeftGivensRotation(Givens* g, Matrix* m){
+void applyLeftGivensRotation(Givens* gv, Matrix* m){
   float a = m->data[0][0];
   float b = m->data[0][1];
-  float c = m->data[1][0];
-  float d = m->data[1][1];
-  float e = m->data[0][2]; 
-  float f = m->data[1][2];
-  float sin = g->sin;
-  float cos = g->cos;
-  m->data[0][0] = cos*a - sin*c;
-  m->data[0][1] = cos*b - sin*d;
-  m->data[1][0] = sin*a + cos*c;
-  m->data[1][1] = cos*d + sin*b;
-  m->data[0][2] = cos*e - sin*f;
-  m->data[1][2] = e*sin + f*cos;
+  float c = m->data[0][2];
+  float d = m->data[0][3];
+  float e = m->data[1][0]; 
+  float f = m->data[1][1];  
+  float g = m->data[1][2]; 
+  float h = m->data[1][3];
+  float sin = gv->sin;
+  float cos = gv->cos;
+  m->data[0][0] = cos*a - sin*e;
+  m->data[1][0] = sin*a + cos*e;  
+  m->data[0][1] = cos*b - sin*f;
+  m->data[0][2] = cos*c - sin*g;
+  m->data[1][1] = sin*b + cos*f;
+  m->data[1][2] = cos*g + sin*c;
+  m->data[0][3] = cos*d - sin*h;
+  m->data[1][3] = d*sin + h*cos;
   
 }
 

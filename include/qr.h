@@ -15,6 +15,7 @@ typedef struct givens{
 Givens** qrDecomposition(Vector*,Vector*,Vector*);
 Givens* givensRotation(float,float);
 void applyLeftGivensRotation(Givens*, Matrix*);
+void qrMethod(Vector*,Vector*,Vector*);
 
 
 #endif 

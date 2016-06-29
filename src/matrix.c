@@ -38,7 +38,8 @@ Matrix* createTranspose(Matrix* m){
   for(i = 0; i < m->row; i++)
     for(j = 0; j < m->col; j++)
       mt->data[j][i] = m->data[i][j];
-  
+
+  return mt;
 }
 
 void freeMatrix(Matrix* mat){

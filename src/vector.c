@@ -37,7 +37,7 @@ Vector* copyVector(Vector* v){
   Vector* copy = createVector(v->len);
   int i;
   for(i = 0; i < v->len; i++)
-    copy[i] = v[i];
+    copy->data[i] = v->data[i];
 
   return copy;
 }

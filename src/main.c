@@ -12,16 +12,16 @@ int main(int argc, char** argv){
   pgm = readPGM("img/lena.pgm",pgm);
   writePGM("img/bla.pgm",pgm);
 
-  up = createVector(2);
-  mid = createVector(3);
-  low = createVector(2);
+  up = createVector(4);
+  mid = createVector(5);
+  low = createVector(4);
 
-  for(i = 0; i < 2; i++){
+  for(i = 0; i < 4; i++){
     up->data[i] = mid->data[i] = low->data[i] = 1;
   }
-  mid->data[2] = 1;
+  mid->data[4] = 1;
 
-  qrDecomposition(up,mid,low);
+  qrMethod(up,mid,low);
   
   return 0;
 }
