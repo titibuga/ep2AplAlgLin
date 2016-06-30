@@ -21,6 +21,19 @@ float** allocateMatrix(int row, int col){
     return ret_val;
 }
 
+void multMatrixReplace(Matrix* A, Matrix* B){
+  int i, j, k;
+  float aux = 0;
+
+  for(i = 0; i < A->row; i++){
+    for(j = 0; j < B->col; j++){
+      for(k = 0; k < B->row; k++)
+	      aux += A->data[i][k]*B->data[k][j];
+      A->data[i][j] = aux;
+    }
+  }
+}
+
 Matrix* createMatrix(int row, int col){
   Matrix* aux = malloc(sizeof *aux);
   int i,j;

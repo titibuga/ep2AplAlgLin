@@ -15,5 +15,6 @@ float dotProduct(Vector*, Vector*);
 Vector* createVector(int);
 void freeVector(Vector*);
 Vector* copyVector(Vector*);
+void cpyVectors(Vector*, Vector*);
 
 #endif

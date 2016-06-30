@@ -18,5 +18,5 @@ Matrix* multMatrix(Matrix*,Matrix*);
 void printMatrix(Matrix*);
 void deallocateMatrix(float**,int);
 Matrix* createTranspose(Matrix*);
-
+void multMatrixReplace(Matrix*, Matrix*);
 #endif
