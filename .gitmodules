@@ -1,2 +1,3 @@
 [submodule "make"]
 	ignore = dirty
+	ignore = dirty
