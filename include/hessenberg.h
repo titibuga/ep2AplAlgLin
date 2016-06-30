@@ -20,7 +20,7 @@ void makeMatrixHouseHolder(Vector*, Matrix*);
 void applyingLeftHouseHolder(Vector*, Vector**, int );
 void applyingRightHouseHolder(Vector*, Vector**, int );
 Matrix* getP();
-
+void freeP();
 
 
 
