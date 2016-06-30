@@ -1,5 +1,7 @@
 #include "qr.h"
 
+#define EPS 0.01
+
 void applyRightGivensRotation(Givens*, Matrix*);
 Matrix* createQ(Givens** ,int);
 Matrix* createGivensMatrix(Givens*,int);
@@ -12,6 +14,7 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
   Givens** vectorGivens;
   Vector *myUp, *myMid, *myLow;
   int n = mid->len;
+  int notConverged = 1;
   int k2, k, j, i, id;
   Matrix *aux,*aux2;
   Matrix* mini = createMatrix(4,2);
@@ -25,7 +28,8 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
       q->data[i][j] = (float)(i==j);
   
   R = NULL;
-  for(k2 = 0; k2 < 3; k2++){
+  for(k2 = 0; notConverged; k2++){
+    notConverged = 0;
     if(R != NULL) freeMatrix(R);
     vectorGivens = qrDecomposition(myUp, myMid,myLow);
     
@@ -48,16 +52,23 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
       /*Populate R*/
       for(j = -2; j <= 1; j++) 
  	for(k = 0; k < 2; k++){
-	  if(id + j >= 0 && id + j < n && k < n && k >= 0 )
+	  if(id + j >= 0 && id + j < n && k < n && k >= 0 ){
 	    R->data[id + j][id + k] = mini->data[j + 2][k];
+	    if(id + j != id + k && R->data[id + j][id + k] > EPS)
+	      notConverged = 1;
+	  }
 	}
+
+      /* printf("\n"); */
+      /* printMatrix(R); */
+      /* printf("\n"); */
     }
 
     /* Populate the vectors with the answers in R */
     for(i = 0; i < n-1; i++){
       myMid->data[i]= R->data[i][i];
-      myLow->data[i]= R->data[i+1][i];
-      myUp->data[i]= R->data[i][i+1];
+      /* Force it to be symmetric */
+       R->data[i][i+1] = myUp->data[i] = myLow->data[i]= R->data[i+1][i];
     }
     myMid->data[n-1]= R->data[n-1][n-1];
     aux = q;

@@ -1,5 +1,11 @@
 #include "matrix.h"
 
+typedef struct pair{
+  float val;
+  int i;
+}Pair;
+
+
 float** allocateMatrix(int row, int col){
   float **ret_val;
     int i;
@@ -97,6 +103,49 @@ Matrix* multMatrix(Matrix* A, Matrix* B){
 	C->data[i][j] += A->data[i][k]*B->data[k][j];
   
   return C;
+}
+
+
+int cmpfunc (const void * a, const void * b)
+{
+  Pair *ap = *((Pair**)a);
+  Pair *bp = *((Pair**)b);
+  return bp->val - ap->val;
+}
+
+Matrix* sortMatrix(Matrix* sigma, Matrix* U){
+  int n = sigma->row, i, id,j;
+  Pair* p;
+  Pair** vecPairs = malloc(n*sizeof(Pair*));
+  Matrix* C = createMatrix(U->row, U->col);
+  
+
+  for(i = 0; i < n; i++){
+    p = malloc(sizeof(Pair));
+    p->i = i;
+    p->val = sigma->data[i][i];
+    vecPairs[i] = p;
+  }
+
+  qsort(vecPairs, n, sizeof(Pair*), cmpfunc);
+
+  for(i = 0; i < n; i++){
+    id = vecPairs[i]->i;
+    sigma->data[i][i] = vecPairs[i]->val;
+    
+    /*populate i-th row of C*/
+    for(j = 0; j < n; j++){
+      C->data[j][i] = U->data[j][id]; 
+    }
+
+    free(vecPairs[i]);
+  }
+
+  free(vecPairs);
+
+  return C;
+
+
 }
 
 void deallocateMatrix(float **matrix, int row){

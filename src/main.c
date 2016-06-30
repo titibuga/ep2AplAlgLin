@@ -21,7 +21,7 @@ int main(int argc, char** argv){
   ata = multMatrix(at,a);
 
   ///////////////////////////////////////////
-  aat2 = toHessenberg(aat);
+  aat2 = toHessenberg(aat);  
   p1 = getP();
   qrMethod(aat2->sup,aat2->princ,aat2->sub);
   r1 = getR();
@@ -43,9 +43,28 @@ int main(int argc, char** argv){
     }
   }
 
-  ut = createTranspose(multMatrix(p2,q2));
+  ut = multMatrix(p2,q2);
+  ut = createTranspose(sortMatrix(r2, ut));
   v = multMatrix(p1,q1);
+  v = sortMatrix(r1,v);
   sigma = r1;
+
+  /* Fixing signals */
+
+  Matrix* helper, *sigmaSigs;
+  helper = multMatrix(at,v);
+  sigmaSigs = multMatrix(ut, helper);
+  for(i = 0; i < sigmaSigs->row && i < ut->row; i++){
+    if(sigmaSigs->data[i][i] < 0){
+      /* multiply i-th line of ut by -1*/
+      for(j = 0; j < ut->col; j++) ut->data[i][j] *=-1;
+    }
+  }
+  freeMatrix(helper);
+  freeMatrix(sigmaSigs);
+
+
+  /* End of fix signals */
 
   Matrix* aux = multMatrix(sigma,ut);
   aux = multMatrix(v,aux);
@@ -62,6 +81,7 @@ int main(int argc, char** argv){
   writePGM("img/bla.pgm",pgm2);
 
   free(pgm);
+  freeMatrix(aux);
 
   return 0;
 }
