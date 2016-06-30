@@ -11,6 +11,8 @@ typedef struct tridiagonal_str{
   Vector *princ, *sub, *sup;
 }Tridiagonal;
 
+#include "matrix.h"
+
 
 Tridiagonal* toHessenberg(Matrix*);
 Tridiagonal* createTridiagonal(int);

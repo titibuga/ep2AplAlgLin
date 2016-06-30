@@ -10,7 +10,7 @@ Matrix *P, *Pinv;
 
 /*****************************************************************************/
 /* toHessenberg:                                                             */
-/* Assumi-se que receberá uma matriz A real simetrica => forma de Hessenberg */
+/* Assume-se que receberá uma matriz A real simetrica => forma de Hessenberg */
 /* é tridiagonal                                                             */
 /* A_n[i] => coluna i de A                                                   */
 /* W[i]   => vetor w para reflexão de Househouder vinculado à coluna i       */

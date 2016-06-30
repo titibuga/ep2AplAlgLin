@@ -4,7 +4,7 @@ void applyRightGivensRotation(Givens*, Matrix*);
 Matrix* createQ(Givens** ,int);
 Matrix* createGivensMatrix(Givens*,int);
 
-Matrix *R;
+Matrix *R,*Q;
 
 
 void qrMethod(Vector* up,Vector* mid,Vector* low){
@@ -15,17 +15,17 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
   int k2, k, j, i, id;
   Matrix *aux,*aux2;
   Matrix* mini = createMatrix(4,2);
-  Matrix* Q = createMatrix(mid->len,mid->len);
+  Matrix* q = createMatrix(mid->len,mid->len);
   myUp = copyVector(up);
   myMid = copyVector(mid);
   myLow = copyVector(low);
 
   for(i = 0; i < mid->len; i++)
     for(j = 0; j < mid->len; j++)
-      Q->data[i][j] = (float)(i==j);
+      q->data[i][j] = (float)(i==j);
   
   R = NULL;
-  for(k2 = 0; k2 < 10000; k2++){
+  for(k2 = 0; k2 < 3; k2++){
     if(R != NULL) freeMatrix(R);
     vectorGivens = qrDecomposition(myUp, myMid,myLow);
     
@@ -60,9 +60,9 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
       myUp->data[i]= R->data[i][i+1];
     }
     myMid->data[n-1]= R->data[n-1][n-1];
-    aux = Q;
+    aux = q;
     aux2 = createQ(vectorGivens,mid->len);
-    Q = multMatrix(Q,aux2);
+    q = multMatrix(q,aux2);
     
     for(i = 0; i < n-1;i++) free(vectorGivens[i]);
     freeMatrix(aux);
@@ -70,23 +70,6 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
     free(vectorGivens);
   }
 
-  printf("After some time frying, we got:\n");
-  
-  printMatrix(R);
-  printf("\n\n");
-  printMatrix(Q);
-  printf("\n\n\n");
-  Matrix* hue = createTranspose(Q);
-  Matrix* bla = multMatrix(R,hue);
-  Matrix* blabla = multMatrix(Q,bla);
-  printMatrix(blabla);
-  
-  freeMatrix(hue);
-  freeMatrix(bla);
-  freeMatrix(blabla);
-  
-  freeMatrix(Q);
-  freeMatrix(R);
 
   freeMatrix(mini);
   freeVector(myUp);
@@ -254,4 +237,12 @@ Givens* givensRotation(float a,float b){ /*pra zerar b, gg */
     }
   }
   return createGivens(s,c);
+}
+
+Matrix* getR(){
+  return R;
+}
+
+Matrix* getQ(){
+  return Q;
 }

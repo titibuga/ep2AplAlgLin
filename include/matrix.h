@@ -19,4 +19,7 @@ void printMatrix(Matrix*);
 void deallocateMatrix(float**,int);
 Matrix* createTranspose(Matrix*);
 void multMatrixReplace(Matrix*, Matrix*);
+void depopulateMatrix(int**,Matrix*);
+
+
 #endif
