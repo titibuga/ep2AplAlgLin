@@ -20,11 +20,18 @@ void subVectors(Vector* A, Vector* B, Vector* C){
 
 float dotProduct(Vector* A, Vector* B){
   int i;
-  float c;
+  float c = 0;
   
   for(i = 0; i < A->len; i++) c += A->data[i] * B->data[i];
   return c;
 }
+
+void cpyVectors(Vector* A, Vector* B){
+  int i;
+
+  for(i = 0; i < A->len; i++) B->data[i] = A->data[i];
+}
+
 
 Vector* createVector(int len){
   Vector* aux = malloc(sizeof *aux);
