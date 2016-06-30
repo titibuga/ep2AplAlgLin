@@ -21,6 +21,7 @@ Vector* findW(Vector*, int);
 void makeMatrixHouseHolder(Vector*, Matrix*);
 void applyingLeftHouseHolder(Vector*, Vector**, int );
 void applyingRightHouseHolder(Vector*, Vector**, int );
+void applyingMatrixRightHouseHolder(Vector*, Matrix*);
 Matrix* getP();
 void freeP();
 

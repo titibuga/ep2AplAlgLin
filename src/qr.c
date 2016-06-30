@@ -1,6 +1,6 @@
 #include "qr.h"
 
-#define EPS 0.01
+#define EPS 0.001
 
 void applyRightGivensRotation(Givens*, Matrix*);
 Matrix* createQ(Givens** ,int);
@@ -30,6 +30,7 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
   R = NULL;
   for(k2 = 0; notConverged; k2++){
     notConverged = 0;
+    //if(k2 >= 10) exit(0);
     if(R != NULL) freeMatrix(R);
     vectorGivens = qrDecomposition(myUp, myMid,myLow);
     
@@ -71,13 +72,17 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
        R->data[i][i+1] = myUp->data[i] = myLow->data[i]= R->data[i+1][i];
     }
     myMid->data[n-1]= R->data[n-1][n-1];
-    aux = q;
-    aux2 = createQ(vectorGivens,mid->len);
-    q = multMatrix(q,aux2);
+    //aux = q;
+    //aux2 = createQ(vectorGivens,mid->len);
+    //q = multMatrix(q,aux2);
     
-    for(i = 0; i < n-1;i++) free(vectorGivens[i]);
-    freeMatrix(aux);
-    freeMatrix(aux2);
+    
+    for(i = 0; i < n-1;i++){
+      applyRightFullGivens(vectorGivens[i], q);
+      free(vectorGivens[i]);
+    }
+    //freeMatrix(aux);
+    //freeMatrix(aux2);
     free(vectorGivens);
   }
 
@@ -86,6 +91,18 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
   freeVector(myUp);
   freeVector(myMid);
   freeVector(myLow);
+}
+
+void applyRightFullGivens(Givens* gv, Matrix* A){
+  int i, id = gv->i;
+  float aid, aid1;
+  float s = gv->sin, c = gv->cos;
+  for(i = 0; i < A->row; i++){
+    aid = A->data[i][id];
+    aid1 = A->data[i][id+1];
+    A->data[i][id] = aid*c + aid1*s;
+    A->data[i][id+1] = -aid*s + aid1*c;
+  }
 }
 
 Matrix* createQ(Givens** givens,int n){

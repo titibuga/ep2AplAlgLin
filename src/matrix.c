@@ -80,7 +80,8 @@ void depopulateMatrix(int** matrix,Matrix* mat){
   for(i = 0; i < mat->row; i++){
     for(j = 0; j < mat->col; j++){
       matrix[i][j] = (int)mat->data[i][j];
-      printf("%f %d\n",mat->data[i][j],matrix[i][j]);
+      if(matrix[i][j] < 0) matrix[i][j] = 0;
+      if(matrix[i][j] > 255) matrix[i][j] = 255;
     }
   }
 }

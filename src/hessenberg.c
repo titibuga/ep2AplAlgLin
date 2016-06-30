@@ -42,6 +42,9 @@ Tridiagonal* toHessenberg(Matrix* A){
     applyingLeftHouseHolder(W[k], A_n, A->col);
     applyingRightHouseHolder(W[k], A_n, A->col);
 
+    /*
+    applyingMatrixRightHouseHolder(W[k], P);
+    */
     
     makeMatrixHouseHolder(W[k], Aux);
     Aux2 = P;
@@ -144,6 +147,33 @@ void freeTridiagonal(Tridiagonal* H){
   freeVector(H->sup);
   free(H);
 }
+
+/*****************************************************************************/
+/* applyingMatrixRightHouseHolder:                                                  */
+/* lambda => ||w||^2                                                         */
+/* wt_a_2 => (w^t * a)*2                                                     */
+/*****************************************************************************/
+void applyingMatrixRightHouseHolder(Vector* w, Matrix* A){
+  int j,i;
+  Vector *aux;
+  float lambda, wt_a_2, dot;
+
+  lambda = dotProduct(w,w);
+  if(lambda == 0) return;
+  aux = createVector(A->col);
+  for(i = 0; i < A->row; i++){
+      cpyVectors(w, aux);
+      dot = 0;
+      for(j = 0; j < A->col; j++)
+	dot+= A->data[i][j]*w->data[j];
+      wt_a_2 = (dot * 2) / lambda;
+      for(j = 0; j < A->col; j++)
+	A->data[i][j] -= wt_a_2*A->data[i][j]; 
+	  // subVectors(A_n[j], aux, A_n[j]);
+  }
+  free(aux);
+}
+
 
 /*****************************************************************************/
 /* applyingLeftHouseHolder:                                                  */
