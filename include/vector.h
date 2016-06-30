@@ -1,6 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <stdio.h>
 #include <stdlib.h>
 
 typedef struct vec{
@@ -16,5 +17,6 @@ Vector* createVector(int);
 void freeVector(Vector*);
 Vector* copyVector(Vector*);
 void cpyVectors(Vector*, Vector*);
+void printVector(Vector*);
 
 #endif

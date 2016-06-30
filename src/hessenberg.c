@@ -160,7 +160,7 @@ void applyingLeftHouseHolder(Vector* w, Vector** A_n, int ncols){
   for(j = 0; j < ncols; j++){
     cpyVectors(w, aux);
     wt_a_2 = dotProduct(w, A_n[j]) * 2;
-    multByScalar((wt_a_2 / lambda), aux);
+    if(lambda != 0.0) multByScalar((wt_a_2 / lambda), aux);
     subVectors(A_n[j], aux, A_n[j]);
   }
   free(aux);
@@ -190,7 +190,7 @@ void applyingRightHouseHolder(Vector* w, Vector** A_n, int nlins){
     wt_a_2 *= 2;
     /***/
 
-    multByScalar((wt_a_2 / lambda), aux);
+    if(lambda != 0.0) multByScalar((wt_a_2 / lambda), aux);
 
     /*subVectors(A_n[i], aux, A_n[i]);*/
     for(j = 0; j < A_n[0]->len; j++){

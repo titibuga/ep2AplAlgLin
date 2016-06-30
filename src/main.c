@@ -34,14 +34,10 @@ int main(int argc, char** argv){
   q2 = getQ();
   ////////////////////////////////////////////
 
-  for(i = 0; i < pgm->row; i++){
-    for(j = 0; j < pgm->col; j++){
-      if( i == j ){
-	r1->data[i][j] = sqrt(r1->data[i][j]);
-	r2->data[i][j] = sqrt(r2->data[i][j]);
-      }
-    }
-  }
+  for(i = 0; i < pgm->row; i++)
+    for(j = 0; j < pgm->col; j++)
+      if( i == j )
+	r1->data[i][j] = sqrt(absF(r1->data[i][j]));
 
   ut = multMatrix(p2,q2);
   ut = createTranspose(sortMatrix(r2, ut));
@@ -67,8 +63,7 @@ int main(int argc, char** argv){
   /* End of fix signals */
 
   Matrix* aux = multMatrix(sigma,ut);
-  aux = multMatrix(v,aux);
-  
+  aux = multMatrix(v,aux);  
 
   PGMData* pgm2 = malloc(sizeof *pgm2);
   pgm2->row = pgm->row;

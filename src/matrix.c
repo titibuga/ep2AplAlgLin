@@ -77,9 +77,12 @@ void populateMatrix(Matrix* mat,int** matrix){
 void depopulateMatrix(int** matrix,Matrix* mat){
   int i,j;
   
-  for(i = 0; i < mat->row; i++)
-    for(j = 0; j < mat->col; j++)
+  for(i = 0; i < mat->row; i++){
+    for(j = 0; j < mat->col; j++){
       matrix[i][j] = (int)mat->data[i][j];
+      printf("%f %d\n",mat->data[i][j],matrix[i][j]);
+    }
+  }
 }
 
 
