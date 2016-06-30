@@ -96,7 +96,6 @@ void writePGM(const char *filename, const PGMData *data){
       }
       fprintf(pgmFile,"\n");
     }
-	  
       
     fclose(pgmFile);
     deallocateDynamicMatrix(data->matrix, data->row);

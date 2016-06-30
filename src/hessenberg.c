@@ -218,3 +218,8 @@ void makeMatrixHouseHolder(Vector* w, Matrix* H){
   }
 
 }
+
+
+Matrix* getP(){
+  return NULL;
+}

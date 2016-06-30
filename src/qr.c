@@ -1,9 +1,10 @@
 #include "qr.h"
 
 void applyRightGivensRotation(Givens*, Matrix*);
+Matrix* createQ(Givens** ,int);
+Matrix* createGivensMatrix(Givens*,int);
 
 Matrix *R;
-
 
 
 void qrMethod(Vector* up,Vector* mid,Vector* low){
@@ -12,12 +13,20 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
   Vector *myUp, *myMid, *myLow;
   int n = mid->len;
   int k2, k, j, i, id;
+  Matrix *aux,*aux2;
   Matrix* mini = createMatrix(4,2);
+  Matrix* Q = createMatrix(mid->len,mid->len);
   myUp = copyVector(up);
   myMid = copyVector(mid);
   myLow = copyVector(low);
 
-  for(k2 = 0; k2 < 100; k2++){
+  for(i = 0; i < mid->len; i++)
+    for(j = 0; j < mid->len; j++)
+      Q->data[i][j] = (float)(i==j);
+  
+  R = NULL;
+  for(k2 = 0; k2 < 10000; k2++){
+    if(R != NULL) freeMatrix(R);
     vectorGivens = qrDecomposition(myUp, myMid,myLow);
     
     /* Time to do R*Q. Apply all givens on the right side */
@@ -33,18 +42,8 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
 	  else
 	    mini->data[j + 2][k] = 0;
 	}
-      printf("Matrix R\n");
-      printMatrix(R);
-
-      
-      printf("\n\nBefore rotation (id: %d): \n", id);
-
-      printMatrix(mini);
 
       applyRightGivensRotation(vectorGivens[i], mini);
-
-      printf("After rotation: \n");
-      printMatrix(mini);
 
       /*Populate R*/
       for(j = -2; j <= 1; j++) 
@@ -52,7 +51,6 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
 	  if(id + j >= 0 && id + j < n && k < n && k >= 0 )
 	    R->data[id + j][id + k] = mini->data[j + 2][k];
 	}
-      printf("\n");
     }
 
     /* Populate the vectors with the answers in R */
@@ -62,15 +60,72 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
       myUp->data[i]= R->data[i][i+1];
     }
     myMid->data[n-1]= R->data[n-1][n-1];
-      
+    aux = Q;
+    aux2 = createQ(vectorGivens,mid->len);
+    Q = multMatrix(Q,aux2);
     
+    for(i = 0; i < n-1;i++) free(vectorGivens[i]);
+    freeMatrix(aux);
+    freeMatrix(aux2);
+    free(vectorGivens);
   }
 
   printf("After some time frying, we got:\n");
-  printMatrix(R);
   
+  printMatrix(R);
+  printf("\n\n");
+  printMatrix(Q);
+  printf("\n\n\n");
+  Matrix* hue = createTranspose(Q);
+  Matrix* bla = multMatrix(R,hue);
+  Matrix* blabla = multMatrix(Q,bla);
+  printMatrix(blabla);
+  
+  freeMatrix(hue);
+  freeMatrix(bla);
+  freeMatrix(blabla);
+  
+  freeMatrix(Q);
+  freeMatrix(R);
 
+  freeMatrix(mini);
+  freeVector(myUp);
+  freeVector(myMid);
+  freeVector(myLow);
 }
+
+Matrix* createQ(Givens** givens,int n){
+  Matrix* Q = createGivensMatrix(givens[0],n);
+  int i;
+  
+  for(i = 1; i < n-1; i++){
+    Matrix* A = createGivensMatrix(givens[i],n);
+    Matrix* aux =  Q;
+    Q = multMatrix(Q,A);
+    freeMatrix(A);
+    freeMatrix(aux);
+  }
+
+  return Q;
+}
+
+Matrix* createGivensMatrix(Givens* g,int n){
+  Matrix* G = createMatrix(n,n);
+  int i,j;
+
+  for(i = 0; i < n; i++)
+    for(j = 0; j < n; j++)
+      G->data[i][j] = (float)( i == j );
+    
+  G->data[g->i][g->i] = g->cos;
+  G->data[g->i][g->i+1] = -1*g->sin;
+  G->data[g->i+1][g->i] = g->sin;
+  G->data[g->i+1][g->i+1] = g->cos;
+
+  return G;
+}
+
+
 
 void applyRightGivensRotation(Givens* gv, Matrix* m){
   int i,j;
@@ -84,12 +139,11 @@ void applyRightGivensRotation(Givens* gv, Matrix* m){
       m->data[i][j] = mt->data[j][i];
 
   freeMatrix(mt);
-  
 }
 
 
 /*
-  Q = G[0]*G[1]*G[2]*(...)*G[n-1]
+  Q = G[0]*G[1]*G[2]*(...)*G[n-2]
 
  */
 
@@ -106,7 +160,6 @@ Givens** qrDecomposition(Vector* up,Vector* mid,Vector* low){
     R->data[i+1][i] = low->data[i];
     R->data[i][i+1] = up->data[i];
   }
-
   
   for(i = 0; i < n-1; i++){
     //printMatrix(R);
@@ -125,8 +178,6 @@ Givens** qrDecomposition(Vector* up,Vector* mid,Vector* low){
     vectorGivens[i] = givensRotation(mini->data[0][1],mini->data[1][1]);
     vectorGivens[i]->i = i;
     applyLeftGivensRotation(vectorGivens[i],mini);
-
-    
     
     /*Populate R with the answer*/
 
@@ -161,6 +212,7 @@ void applyLeftGivensRotation(Givens* gv, Matrix* m){
   float h = m->data[1][3];
   float sin = gv->sin;
   float cos = gv->cos;
+  
   m->data[0][0] = cos*a - sin*e;
   m->data[1][0] = sin*a + cos*e;  
   m->data[0][1] = cos*b - sin*f;
@@ -177,7 +229,6 @@ Givens* createGivens(float s,float c){
   aux->sin = s;
   aux->cos = c;
   aux->i = 0;
-  printf("Seno: %f Cosseno: %f\n",s,c);
   return aux;
 }
 
@@ -204,24 +255,3 @@ Givens* givensRotation(float a,float b){ /*pra zerar b, gg */
   }
   return createGivens(s,c);
 }
-
-
-
-/* #if 0 */
-
-/* function [Q,R] = qrgivens(A) */
-/*   [m,n] = size(A); */
-/*   Q = eye(m); */
-/*   R = A; */
-
-/*   for j = 1:n */
-/*     for i = m:-1:(j+1) */
-/*       G = eye(m); */
-/*       [c,s] = givensrotation( R(i-1,j),R(i,j) ); */
-/*       G([i-1, i],[i-1, i]) = [c -s; s c;] */
-/*       R = G'*R; */
-/*       Q = Q*G; */
-/*     end */
-/*   end */
-
-/* end */

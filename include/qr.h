@@ -9,7 +9,7 @@
 typedef struct givens{
   float sin;
   float cos;
-  float i; /* Givens on lines {i, i+1} cols {i, i+1}*/
+  int i; /* Givens on lines {i, i+1} cols {i, i+1}*/
 }Givens;
 
 Givens** qrDecomposition(Vector*,Vector*,Vector*);

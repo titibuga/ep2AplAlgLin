@@ -22,6 +22,10 @@ int main(int argc, char** argv){
   mid->data[4] = 1;
 
   qrMethod(up,mid,low);
-  
+  freeVector(up);
+  freeVector(mid);
+  freeVector(low);
+  free(pgm);
+
   return 0;
 }
