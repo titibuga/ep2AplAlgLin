@@ -55,9 +55,10 @@ int main(int argc, char** argv){
   pgm2->row = pgm->row;
   pgm2->col = pgm->col;
   pgm2->max_gray = pgm->max_gray;
+  pgm2->matrix = allocateDynamicMatrix(pgm->row,pgm->col);
   depopulateMatrix(pgm2->matrix,aux);
 
-  writePGM("img/lena.pgm",pgm);
+  writePGM("img/hue.pgm",pgm);
   writePGM("img/bla.pgm",pgm2);
 
   free(pgm);

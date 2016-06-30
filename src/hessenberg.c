@@ -229,7 +229,6 @@ Matrix* getP(){
   return P;
 }
 
-void freeP()
-{
+void freeP(){
   freeMatrix(P);
 }

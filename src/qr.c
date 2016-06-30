@@ -70,7 +70,7 @@ void qrMethod(Vector* up,Vector* mid,Vector* low){
     free(vectorGivens);
   }
 
-
+  Q = q;
   freeMatrix(mini);
   freeVector(myUp);
   freeVector(myMid);
