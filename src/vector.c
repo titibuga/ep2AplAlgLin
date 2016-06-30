@@ -56,3 +56,9 @@ void freeVector(Vector* vec){
 }
 
 
+void printVector(Vector* vec){
+  int i;
+
+  for(i = 0; i < vec->len; i++) printf("%f ",vec->data[i]);
+  printf("\n");
+}

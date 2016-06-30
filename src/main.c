@@ -34,22 +34,18 @@ int main(int argc, char** argv){
   q2 = getQ();
   ////////////////////////////////////////////
 
-  for(i = 0; i < pgm->row; i++){
-    for(j = 0; j < pgm->col; j++){
-      if( i == j ){
-	r1->data[i][j] = sqrt(r1->data[i][j]);
-	r2->data[i][j] = sqrt(r2->data[i][j]);
-      }
-    }
-  }
+  for(i = 0; i < pgm->row; i++)
+    for(j = 0; j < pgm->col; j++)
+      if( i == j )
+	r1->data[i][j] = sqrt(absF(r1->data[i][j]));
 
+  
   ut = createTranspose(multMatrix(p2,q2));
   v = multMatrix(p1,q1);
   sigma = r1;
 
   Matrix* aux = multMatrix(sigma,ut);
-  aux = multMatrix(v,aux);
-  
+  aux = multMatrix(v,aux);  
 
   PGMData* pgm2 = malloc(sizeof *pgm2);
   pgm2->row = pgm->row;
