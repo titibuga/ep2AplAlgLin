@@ -5,7 +5,7 @@
 #include "hessenberg.h"
 
 
-Matrix *P, *Pinv;
+Matrix *P;
 
 
 /*****************************************************************************/
@@ -20,11 +20,12 @@ Tridiagonal* toHessenberg(Matrix* A){
   Tridiagonal *H;
   Vector **W;
   Vector **A_n;
-  Matrix *Aux;
+  Matrix *Aux, *Aux2;
 
   P = createMatrix(A->row, A->col);
-  Pinv = createMatrix(A->row, A->col);
   Aux = createMatrix(A->row, A->col);
+
+  for(i = 0; i < A->row; i++) P->data[i][i] = 1;
 
   W = malloc((A->col - 2) * sizeof(*W));
   /*criando/inicializando A_n tq A_n = A*/
@@ -41,7 +42,11 @@ Tridiagonal* toHessenberg(Matrix* A){
     applyingLeftHouseHolder(W[k], A_n, A->col);
     applyingRightHouseHolder(W[k], A_n, A->col);
 
+    
     makeMatrixHouseHolder(W[k], Aux);
+    Aux2 = P;
+    P = multMatrix(P, Aux);
+    free(Aux2);
 
     /***DEBUG***/
     if(DEBUG_HESS > 2){
@@ -221,5 +226,10 @@ void makeMatrixHouseHolder(Vector* w, Matrix* H){
 
 
 Matrix* getP(){
-  return NULL;
+  return P;
+}
+
+void freeP()
+{
+  freeMatrix(P);
 }
